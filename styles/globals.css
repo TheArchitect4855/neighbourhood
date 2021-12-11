@@ -1,6 +1,7 @@
 :root {
 	--primary-color: #fff;
 	--secondary-color: #eee;
+	--tertiary-color: #666;
 }
 
 article {
@@ -20,6 +21,12 @@ button {
 	border: none;
 	border-radius: 5px;
 	padding: 0.5em;
+}
+
+button.menuButton {
+	background-color: transparent;
+	height: 5em;
+	width: 5em;
 }
 
 form {
