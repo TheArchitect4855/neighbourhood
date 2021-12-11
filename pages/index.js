@@ -1,5 +1,6 @@
 import Cookies from "cookies";
 import React from "react";
+import Link from "next/link";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
@@ -21,6 +22,11 @@ export default class Home extends React.Component {
 				<main>
 					{content}
 				</main>
+
+				<button id="createPost">
+					<Link href="/post/create">+</Link>
+				</button>
+				
 				<Footer />
 			</div>
 		);
