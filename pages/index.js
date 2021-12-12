@@ -4,6 +4,7 @@ import Link from "next/link";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { parseMd } from "../lib/mdparser";
+import { validateToken, getPostsFor } from "../lib/backend";
 
 export default class Home extends React.Component {
 	render() {
@@ -57,7 +58,7 @@ export async function getServerSideProps(ctx) {
 	const cookies = new Cookies(req, res);
 
 	const userToken = cookies.get("userToken");
-	if(!userToken) {
+	if(!userToken || !validateToken(userToken)) {
 		return {
 			redirect: {
 				destination: "/login",
@@ -66,10 +67,7 @@ export async function getServerSideProps(ctx) {
 		};
 	}
 
-	// TODO: Validate login token
-
-	// TODO: Get posts
-	const posts = [];
+	const posts = getPostsFor(1);
 	return {
 		props: {
 			posts

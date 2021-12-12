@@ -8,8 +8,32 @@ export default class Login extends React.Component {
 		this.sendCode = this.sendCode.bind(this);
 		this.emailForm = React.createRef();
 		this.codeForm = React.createRef();
+
+		this.state = {
+			msg: "",
+		}
 	}
 	
+	componentDidMount() {
+		let msg = null;
+		if(window.location.search) {
+			const query = {};
+			window.location.search.substring(1)
+				.split("&")
+				.forEach((x) => {
+					const pair = x.split("=");
+					const key = decodeURIComponent(pair[0]);
+					const value = decodeURIComponent(pair[1]);
+					return query[key] = value;
+				});
+			msg = query.msg;
+		}
+
+		if(msg) {
+			this.setState({ msg });
+		}
+	}
+
 	render() {
 		return (
 			<div>
@@ -37,6 +61,8 @@ export default class Login extends React.Component {
 							<input type="text" name="code" placeholder="12345" minLength="5" maxLength="5" required /> <br/>
 							<button type="submit">Log In</button>
 						</div>
+
+						<p style={{ color: "red" }}>{this.state.msg}</p>
 					</form>
 
 					<article>
