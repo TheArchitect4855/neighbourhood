@@ -3,16 +3,27 @@ import React from "react";
 import Link from "next/link";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { parseMd } from "../lib/mdparser";
 
 export default class Home extends React.Component {
 	render() {
 		const { posts } = this.props;
-		let content = [];
-		if(posts.msg) {
-			content = (
-				<div style={{ textAlign: "center", width: "100%", margin: "1em 0" }}>
-					{ posts.msg }
-				</div>
+		let body = [];
+		let idx = 0;
+		for(let post of posts) {
+			let name = "system";
+			let rank = 0;
+			if(post.author) {
+				name = post.author.name;
+				rank = post.author.rank;
+			}
+
+			const content = parseMd(post.content);
+			body.push(
+				<article key={++idx}>
+					<h4>{name} <span className="userRank">#{rank}</span></h4>
+					{content}
+				</article>
 			);
 		}
 
@@ -20,7 +31,7 @@ export default class Home extends React.Component {
 			<div>
 				<Header />
 				<main>
-					{content}
+					{body}
 				</main>
 
 				<button id="createPost">
@@ -50,9 +61,11 @@ export async function getServerSideProps(ctx) {
 	// TODO: Validate login token
 
 	// TODO: Get posts
-	const posts = {
-		msg: "No posts yet!",
-	};
+	const posts = [
+		{ 
+			content: "No posts yet!"
+		}
+	];
 
 	return {
 		props: {
