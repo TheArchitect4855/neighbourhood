@@ -27,6 +27,14 @@ export default class Home extends React.Component {
 			);
 		}
 
+		if(posts.length == 0) {
+			body = (
+				<article>
+					No posts yet! Why not <Link href="/post/create">create one</Link>?
+				</article>
+			);
+		}
+
 		return (
 			<div>
 				<Header />
@@ -61,12 +69,7 @@ export async function getServerSideProps(ctx) {
 	// TODO: Validate login token
 
 	// TODO: Get posts
-	const posts = [
-		{ 
-			content: "No posts yet!"
-		}
-	];
-
+	const posts = [];
 	return {
 		props: {
 			posts
