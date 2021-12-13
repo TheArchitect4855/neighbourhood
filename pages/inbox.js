@@ -27,10 +27,11 @@ export default class Inbox extends React.Component {
 		let msgs = [];
 		for(const msg of messages) {
 			const { to, preview } = msg;
+			// TODO: Messaging
 			msgs.push(
 				<article style={{ display: "flex", justifyContent: "space-between" }}>
-					<h4>{to.name} <span className="usernum">{to.rank}</span></h4>
-					<p style={{ opacity: "50%" }} dangerouslySetInnerHTML={{ __html: preview }}></p>
+					<h4 style={{ margin: "auto 0" }}>{to.name} <span className="userRank">#{to.rank}</span></h4>
+					<p style={{ color: "#888" }} dangerouslySetInnerHTML={{ __html: preview }}></p>
 				</article>
 			);
 		}
