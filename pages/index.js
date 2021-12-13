@@ -2,7 +2,6 @@ import Cookies from "cookies";
 import React from "react";
 import Link from "next/link";
 import Header from "../components/Header";
-import Image from "next/image";
 import Footer from "../components/Footer";
 import { parseMd } from "../lib/mdparser";
 import { validateToken, getPostsFor } from "../lib/backend";
