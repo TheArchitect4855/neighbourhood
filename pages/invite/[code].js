@@ -22,7 +22,8 @@ export default withRouter(class Invite extends React.Component {
 	render() {
 		const { valid, neighbourhood, code } = this.props;
 
-		const message = valid ? `You've been invited to join Neighbourhood #${neighbourhood}! Now you can sign up and start participating in your community.` : "This invite is invalid."
+		let message = valid ? `You've been invited to join Neighbourhood #${neighbourhood}! Now you can sign up and start participating in your community.` : "This invite is invalid."
+		if(this.props.message) message = this.props.message;
 
 		let signupForm = null;
 		if(valid) {
@@ -130,9 +131,8 @@ export async function getServerSideProps(ctx) {
 	const userToken = cookies.get("userToken");
 	if(userToken && validateToken(userToken)) {
 		return {
-			redirect: {
-				destination: "/",
-				permanent: false,
+			props: {
+				message: "You're already in a neighbourhood!"
 			}
 		};
 	}
