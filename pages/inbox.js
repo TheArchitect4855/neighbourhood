@@ -10,9 +10,10 @@ export default class Inbox extends React.Component {
 		const { messages, notifications } = this.props;
 
 		let notifs = [];
+		let idx = 0;
 		for(const notif of notifications) {
 			notifs.push(
-				<article dangerouslySetInnerHTML={{ __html: notif }}></article>
+				<article dangerouslySetInnerHTML={{ __html: notif }} key={++idx}></article>
 			);
 		}
 
@@ -29,7 +30,7 @@ export default class Inbox extends React.Component {
 			const { to, preview } = msg;
 			// TODO: Messaging
 			msgs.push(
-				<article style={{ display: "flex", justifyContent: "space-between" }}>
+				<article style={{ display: "flex", justifyContent: "space-between" }} key={++idx}>
 					<h4 style={{ margin: "auto 0" }}>{to.name} <span className="userRank">#{to.rank}</span></h4>
 					<p style={{ color: "#888" }} dangerouslySetInnerHTML={{ __html: preview }}></p>
 				</article>
