@@ -1,7 +1,9 @@
 import Footer from "../components/Footer";
 import Head from "next/head";
 import React from "react";
+import Cookies from "cookies";
 import { withRouter } from "next/router";
+import { validateToken } from "../lib/backend";
 
 export default withRouter(class Login extends React.Component {
 	constructor(props) {
@@ -67,3 +69,18 @@ export default withRouter(class Login extends React.Component {
 		codeForm.style.display = "block";
 	}
 });
+
+export async function getServerSideProps(ctx) {
+	const { req, res } = ctx;
+	const cookies = new Cookies(req, res);
+
+	const userToken = cookies.get("userToken");
+	if(userToken && validateToken(userToken)) {
+		return {
+			redirect: {
+				destination: "/",
+				permanent: false,
+			}
+		};
+	}
+}
