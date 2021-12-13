@@ -1,40 +1,20 @@
 import Footer from "../components/Footer";
 import Head from "next/head";
 import React from "react";
+import { withRouter } from "next/router";
 
-export default class Login extends React.Component {
+export default withRouter(class Login extends React.Component {
 	constructor(props) {
 		super(props);
 		this.sendCode = this.sendCode.bind(this);
 		this.emailForm = React.createRef();
 		this.codeForm = React.createRef();
-
-		this.state = {
-			msg: "",
-		}
-	}
-	
-	componentDidMount() {
-		let msg = null;
-		if(window.location.search) {
-			const query = {};
-			window.location.search.substring(1)
-				.split("&")
-				.forEach((x) => {
-					const pair = x.split("=");
-					const key = decodeURIComponent(pair[0]);
-					const value = decodeURIComponent(pair[1]);
-					return query[key] = value;
-				});
-			msg = query.msg;
-		}
-
-		if(msg) {
-			this.setState({ msg });
-		}
 	}
 
 	render() {
+		let { msg } = this.props.router.query;
+		if(!msg) msg = "";
+
 		return (
 			<div>
 				<Head>
@@ -62,7 +42,7 @@ export default class Login extends React.Component {
 							<button type="submit">Log In</button>
 						</div>
 
-						<p style={{ color: "red" }}>{this.state.msg}</p>
+						<p style={{ color: "red" }}>{msg}</p>
 					</form>
 
 					<article>
@@ -86,4 +66,4 @@ export default class Login extends React.Component {
 		const codeForm = this.codeForm.current;
 		codeForm.style.display = "block";
 	}
-}
+});
