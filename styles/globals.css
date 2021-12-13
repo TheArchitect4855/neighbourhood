@@ -23,6 +23,11 @@
 	text-decoration: none;
 }
 
+.subtitle {
+	color: var(--tertiary-color);
+	font-family: 'Readex Pro', sans-serif;
+}
+
 a.mention {
 	background-color: #80bfff;
 	border-radius: 5px;
@@ -34,6 +39,7 @@ a.mention {
 article {
 	background-color: var(--secondary-color);
 	border-radius: 5px;
+	line-height: 1.5em;
 	margin: 1em 0;
 	padding: 1em;
 	word-wrap: break-word;
@@ -111,4 +117,16 @@ span.userRank {
 	color: var(--tertiary-color);
 	font-size: 0.75em;
 	font-weight: lighter;
+}
+
+table.spaced {
+	width: 100%;
+}
+
+table.spaced td {
+	padding: 1em 0;
+}
+
+table.spaced td:last-child {
+	text-align: right;
 }
