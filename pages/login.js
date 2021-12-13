@@ -41,6 +41,9 @@ export default withRouter(class Login extends React.Component {
 						<div ref={this.codeForm} style={{ display: "none" }}>
 							<label htmlFor="code">Code:</label> <br />
 							<input type="text" name="code" placeholder="12345" minLength="5" maxLength="5" required /> <br/>
+							
+							<input type="checkbox" name="remember" />
+							<label htmlFor="remember">Remember Me</label> <br />
 							<button type="submit">Log In</button>
 						</div>
 
@@ -82,5 +85,9 @@ export async function getServerSideProps(ctx) {
 				permanent: false,
 			}
 		};
+	}
+
+	return {
+		props: {}
 	}
 }

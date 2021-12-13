@@ -25,7 +25,7 @@ export async function getServerSideProps(ctx) {
 		};
 	}
 
-	const { email, code } = await new Promise((resolve, reject) => {
+	const { email, code, remember } = await new Promise((resolve, reject) => {
 		req.on("data", (data) => {
 			const body = parseBody(data);
 			resolve(body);
@@ -44,7 +44,13 @@ export async function getServerSideProps(ctx) {
 	}
 
 	const cookies = new Cookies(req, res);
-	cookies.set("userToken", email);
+	
+	let options = {};
+	if(remember && remember == "on") {
+		options.maxAge = 30 * 86400000;
+	}
+	
+	cookies.set("userToken", email, options); // TODO: Get actual token
 	return {
 		redirect: {
 			destination: "/",
