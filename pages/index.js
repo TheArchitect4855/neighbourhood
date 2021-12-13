@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 import { parseMd } from "../lib/mdparser";
 import { validateToken, getPostsFor } from "../lib/backend";
 import styles from "../styles/index.module.css";
+import Head from "next/head";
 
 export default class Home extends React.Component {
 	constructor(props) {
@@ -44,6 +45,10 @@ export default class Home extends React.Component {
 
 		return (
 			<div>
+				<Head>
+					<title>Neighbourhood</title>
+				</Head>
+
 				<Header />
 				<main>
 					{body}
