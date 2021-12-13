@@ -2,22 +2,38 @@ import Cookies from "cookies";
 import React from "react";
 import Link from "next/link";
 import Header from "../components/Header";
+import Image from "next/image";
 import Footer from "../components/Footer";
 import { parseMd } from "../lib/mdparser";
 import { validateToken, getPostsFor } from "../lib/backend";
+import styles from "../styles/index.module.css";
+
+import messageIcon from "../public/icons/message.svg";
+import flagIcon from "../public/icons/flag.svg";
 
 export default class Home extends React.Component {
+	constructor(props) {
+		super(props);
+		this.report = this.report.bind(this);
+	}
+	
 	render() {
 		const { posts } = this.props;
 		let body = [];
-		let idx = 0;
 		for(let post of posts) {
 			const { name, rank } = post.author;
 			const content = parseMd(post.content);
 			body.push(
-				<article key={++idx}>
+				<article key={ post.id } id={ post.id }>
 					<h4>{name} <span className="userRank">#{rank}</span></h4>
 					{content}
+					<div className={ styles.postFooter }>
+						<Link href={ `/post/view?id=${post.id}` }>
+							<img src="/icons/message.svg" alt="Message Icon"></img>
+						</Link>
+
+						<img src="/icons/flag.svg" alt="Flag Icon" onClick={ () => this.report(post.id) }></img>
+					</div>
 				</article>
 			);
 		}
@@ -44,6 +60,11 @@ export default class Home extends React.Component {
 				<Footer />
 			</div>
 		);
+	}
+
+	report(id) {
+		// TODO
+		console.log(`Report ${id}`);
 	}
 }
 

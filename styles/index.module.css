@@ -1,0 +1,9 @@
+div.postFooter {
+	display: flex;
+	justify-content: flex-end;
+}
+
+div.postFooter img {
+	height: 2em;
+	width: 2em;
+}
