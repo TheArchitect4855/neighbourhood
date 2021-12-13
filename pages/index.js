@@ -12,13 +12,7 @@ export default class Home extends React.Component {
 		let body = [];
 		let idx = 0;
 		for(let post of posts) {
-			let name = "system";
-			let rank = 0;
-			if(post.author) {
-				name = post.author.name;
-				rank = post.author.rank;
-			}
-
+			const { name, rank } = post.author;
 			const content = parseMd(post.content);
 			body.push(
 				<article key={++idx}>
