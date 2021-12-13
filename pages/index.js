@@ -8,9 +8,6 @@ import { parseMd } from "../lib/mdparser";
 import { validateToken, getPostsFor } from "../lib/backend";
 import styles from "../styles/index.module.css";
 
-import messageIcon from "../public/icons/message.svg";
-import flagIcon from "../public/icons/flag.svg";
-
 export default class Home extends React.Component {
 	constructor(props) {
 		super(props);
