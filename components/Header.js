@@ -12,6 +12,7 @@ export default class Header extends React.Component {
 	constructor(props) {
 		super(props);
 		this.toggleMenu = this.toggleMenu.bind(this);
+		this.menuRef = React.createRef();
 		this.state = {
 			menuOpen: false,
 		};
@@ -25,9 +26,7 @@ export default class Header extends React.Component {
 					<Image src={menuIcon} alt="Menu Icon"></Image>
 				</button>
 
-				<div className={styles.menu} style={{ 
-					width: this.state.menuOpen ? "5em" : 0,
-				}}>
+				<div className={styles.menu} ref={ this.menuRef }>
 					<button className="portrait menuButton" onClick={this.toggleMenu}>
 						<span style={{ fontSize: "2em", fontWeight: "bold" }}>&#62;</span>
 					</button>
@@ -56,6 +55,13 @@ export default class Header extends React.Component {
 
 	toggleMenu() {
 		const menuOpen = !this.state.menuOpen;
+		const { current } = this.menuRef;
+		if(menuOpen) {
+			current.style.width = "5em";
+		} else {
+			current.style.width = 0;
+		}
+
 		this.setState({ menuOpen });
 	}
 }
