@@ -28,7 +28,7 @@ export default withRouter(class Invite extends React.Component {
 		let signupForm = null;
 		if(valid) {
 			signupForm = (
-				<form action={ `/signup?code=${code}` } method="POST">
+				<form action={ `/api/user/create?code=${code}` } method="POST">
 					<table className="spaced">
 						<tbody>
 							<tr>
