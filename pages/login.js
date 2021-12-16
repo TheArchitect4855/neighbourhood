@@ -66,6 +66,7 @@ export default withRouter(class Login extends React.Component {
 	async sendCode(e) {
 		e.preventDefault();
 
+		this.msgBox.current.innerText = "";
 		const emailInput = this.emailInput.current;
 		const email = emailInput.value;
 		const res = await fetch("/api/user/code", {
@@ -79,7 +80,6 @@ export default withRouter(class Login extends React.Component {
 		});
 
 		const { ok, msg } = await res.json();
-
 		if(ok) {
 			const emailForm = this.emailForm.current;
 			emailForm.style.display = "none";
