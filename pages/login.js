@@ -31,7 +31,7 @@ export default withRouter(class Login extends React.Component {
 					<h2>Log In</h2>
 					<hr />
 
-					<form action="/authenticate" method="POST">
+					<form action="/api/user/auth" method="POST">
 						<div ref={this.emailForm}>
 							<label htmlFor="email">Email:</label> <br/>
 							<input type="email" name="email" placeholder="email@example.com" required /> <br/>
