@@ -11,7 +11,10 @@ import Head from "next/head";
 export default class Home extends React.Component {
 	constructor(props) {
 		super(props);
+		this.reportRef = React.createRef();
+		this.postIdInputRef = React.createRef();
 		this.report = this.report.bind(this);
+		this.cancelReport = this.cancelReport.bind(this);
 	}
 	
 	render() {
@@ -57,15 +60,35 @@ export default class Home extends React.Component {
 				<button id="createPost">
 					<Link href="/post/create">+</Link>
 				</button>
-				
+
+				<article className="popup" ref={ this.reportRef }>
+					<h2>Report Post</h2>
+					<form action="/api/post/report" method="POST" style={{ textAlign: "left" }}>
+						<label htmlFor="reason">Reason for report:</label> <br />
+						<textarea name="reason" placeholder="Reason..." style={{ resize: "none" }} rows="10" cols="40" required></textarea> <br />
+						<input type="hidden" name="postId" ref={ this.postIdInputRef } />
+						<button type="submit">Submit</button>
+						<span style={{ margin: "0.5em" }}></span>
+						<button type="reset" onClick={ this.cancelReport }>Cancel</button>
+					</form>
+				</article>
+
 				<Footer />
 			</div>
 		);
 	}
 
 	report(id) {
-		// TODO
-		console.log(`Report ${id}`);
+		const report = this.reportRef.current;
+		report.style.display = "block";
+
+		const postIdInput = this.postIdInputRef.current;
+		postIdInput.value = id;
+	}
+
+	cancelReport() {
+		const { current } = this.reportRef;
+		current.style.display = "none";
 	}
 }
 
