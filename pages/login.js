@@ -11,6 +11,8 @@ export default withRouter(class Login extends React.Component {
 		this.sendCode = this.sendCode.bind(this);
 		this.emailForm = React.createRef();
 		this.codeForm = React.createRef();
+		this.emailInput = React.createRef();
+		this.msgBox = React.createRef();
 	}
 
 	render() {
@@ -34,7 +36,7 @@ export default withRouter(class Login extends React.Component {
 					<form action="/api/user/auth" method="POST">
 						<div ref={this.emailForm}>
 							<label htmlFor="email">Email:</label> <br/>
-							<input type="email" name="email" placeholder="email@example.com" required /> <br/>
+							<input type="email" name="email" placeholder="email@example.com" ref={this.emailInput} required /> <br/>
 							<button type="button" onClick={this.sendCode}>Send Code</button>
 						</div>
 
@@ -47,7 +49,7 @@ export default withRouter(class Login extends React.Component {
 							<button type="submit">Log In</button>
 						</div>
 
-						<p style={{ color: "red" }}>{msg}</p>
+						<p style={{ color: "red" }} ref={ this.msgBox }>{msg}</p>
 					</form>
 
 					<article>
@@ -61,15 +63,33 @@ export default withRouter(class Login extends React.Component {
 		);
 	}
 
-	sendCode(e) {
+	async sendCode(e) {
 		e.preventDefault();
 
-		// TODO: Send user a code
-		const emailForm = this.emailForm.current;
-		emailForm.style.display = "none";
+		const emailInput = this.emailInput.current;
+		const email = emailInput.value;
+		const res = await fetch("/api/user/code", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				email,
+			}),
+		});
 
-		const codeForm = this.codeForm.current;
-		codeForm.style.display = "block";
+		const { ok, msg } = await res.json();
+
+		if(ok) {
+			const emailForm = this.emailForm.current;
+			emailForm.style.display = "none";
+
+			const codeForm = this.codeForm.current;
+			codeForm.style.display = "block";
+		} else {
+			const { current } = this.msgBox;
+			current.innerText = msg;
+		}
 	}
 });
 

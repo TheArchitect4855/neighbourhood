@@ -1,7 +1,7 @@
 import Cookies from "cookies";
 import { useLoginCode } from "../../../lib/backend";
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
 	if(req.method != "POST") {
 		res.status(400).end();
 		return;
@@ -17,7 +17,7 @@ export default function handler(req, res) {
 		return;
 	}
 
-	const { ok, msg } = useLoginCode(email, code);
+	const { ok, msg } = await useLoginCode(email, code);
 	if(!ok) {
 		res.writeHead(302, {
 			Location: `/login?msg=${encodeURIComponent(msg)}`
