@@ -1,7 +1,7 @@
 import Cookies from "cookies";
 import { createAccount, validateToken } from "../../../lib/backend";
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
 	if(req.method != "POST") {
 		res.status(400).end();
 		return;
@@ -34,7 +34,7 @@ export default function handler(req, res) {
 		return;
 	}
 
-	const { ok, msg } = createAccount(email, nickname, dob, fname, lname);
+	const { ok, msg } = await createAccount(email, nickname, dob, fname, lname);
 	if(!ok) {
 		res.writeHead(302, {
 			Location: `/invite/${code}?msg=${encodeURIComponent(msg)}`
