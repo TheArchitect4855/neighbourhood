@@ -13,11 +13,11 @@ export default class Profile extends React.Component {
 		const bioContent = parseMd(bio ?? "");
 
 		let name = null;
-		if(fname && lname) {
+		if(fname || lname) {
 			name = (
 				<tr>
 					<td className="subtitle">Name</td>
-					<td>{fname} {lname}</td>
+					<td>{fname ?? ""} {lname ?? ""}</td>
 				</tr>
 			);
 		}
