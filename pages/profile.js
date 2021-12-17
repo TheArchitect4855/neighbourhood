@@ -10,7 +10,7 @@ import Link from "next/link";
 export default class Profile extends React.Component {
 	render() {
 		const { displayName, rank, position, neighbourhood, fname, lname, dob, bio } = this.props.userData;
-		const bioContent = parseMd(bio);
+		const bioContent = parseMd(bio ?? "");
 
 		let name = null;
 		if(fname && lname) {
@@ -63,7 +63,7 @@ export default class Profile extends React.Component {
 	}
 }
 
-export function getServerSideProps(ctx) {
+export async function getServerSideProps(ctx) {
 	const { req, res } = ctx;
 	const cookies = new Cookies(req, res);
 
@@ -77,7 +77,7 @@ export function getServerSideProps(ctx) {
 		};
 	}
 
-	const userData = getUserData(userToken);
+	const userData = await getUserData(userToken);
 	return {
 		props: { userData }
 	}
