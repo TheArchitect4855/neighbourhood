@@ -1,0 +1,93 @@
+import Cookies from "cookies";
+import React from "react";
+import Footer from "../../components/Footer";
+import Header from "../../components/Header";
+import Head from "next/head";
+import { validateToken, getUserData } from "../../lib/backend";
+
+export default class Edit extends React.Component {
+	render() {
+		const { displayName, fname, lname, bio }
+			= this.props.userData;
+
+		return (
+			<div>
+				<Head>
+					<title>Profile</title>
+				</Head>
+
+				<Header />
+
+				<main>
+					<h2>Edit Profile</h2>
+					<hr />
+
+					<form action="/api/user/update" method="POST" style={{ textAlign: "left" }}>
+						<table>
+							<tbody>
+								<tr>
+									<td>
+										<label forName="nickname">Nickname: </label>
+									</td>
+									<td>
+										<input type="text" name="nickname" defaultValue={ displayName } maxLength="30" required />
+									</td>
+								</tr>
+								
+								<tr>
+									<td>
+										<label forName="fname">First Name: </label>
+									</td>
+									<td>
+										<input type="text" name="fname" defaultValue={ fname } maxLength="30" />
+									</td>
+								</tr>
+
+								<tr>
+									<td>
+										<label forName="lname">Last Name: </label>
+									</td>
+
+									<td>
+										<input type="text" name="lname" defaultValue={ lname } maxLength="30" />
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+						<label forName="bio">Bio: </label> <br />
+						<textarea name="bio" maxLength="250" rows="6" cols="45" style={{ resize: "none" }} >
+							{ bio }
+						</textarea>
+
+						<br />
+
+						<button type="submit">Update Profile</button>
+					</form>
+				</main>
+
+				<Footer />
+			</div>
+		);
+	}
+}
+
+export async function getServerSideProps(ctx) {
+	const { req, res } = ctx;
+	const cookies = new Cookies(req, res);
+
+	const userToken = cookies.get("userToken");
+	if(!userToken || !validateToken(userToken)) {
+		return {
+			redirect: {
+				destination: "/login",
+				permanent: false,
+			}
+		};
+	}
+
+	const userData = await getUserData(userToken);
+	return {
+		props: { userData }
+	}
+}
