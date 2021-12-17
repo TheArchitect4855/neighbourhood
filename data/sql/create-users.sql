@@ -5,5 +5,7 @@ CREATE TABLE users (
 	dob DATE NOT NULL,
 	fname VARCHAR(30),
 	lname VARCHAR(30),
-	joined_on DATE NOT NULL
+	joined_on DATE NOT NULL,
+	bio VARCHAR(250),
+	position CHAR(1) CHECK(position IS ("U", "M", "A"))
 );
