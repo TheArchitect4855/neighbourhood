@@ -6,6 +6,7 @@ CREATE TABLE users (
 	joined_on DATE NOT NULL,
 	position CHAR(1) CHECK(position IN ("U", "M", "A")) NOT NULL DEFAULT "U",
 	neighbourhood INTEGER NOT NULL,
+	rank INTEGER NOT NULL,
 	fname VARCHAR(30),
 	lname VARCHAR(30),
 	bio VARCHAR(250)
