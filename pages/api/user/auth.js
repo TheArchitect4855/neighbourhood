@@ -1,6 +1,8 @@
 import Cookies from "cookies";
 import { useLoginCode } from "../../../lib/backend";
 
+const jwt = require("jsonwebtoken");
+
 export default async function handler(req, res) {
 	if(req.method != "POST") {
 		res.status(400).end();
@@ -27,13 +29,18 @@ export default async function handler(req, res) {
 		return;
 	}
 
+	const token = jwt.sign({ email }, "supersecret", {
+		expiresIn: "30d",
+		issuer: "Neighbourhood",
+	});
+
 	const options = {};
 	if(remember && remember == "on") {
 		options.maxAge = 30 * 86400000;
 	}
 
 	const cookies = new Cookies(req, res);
-	cookies.set("userToken", email, options); // TODO: Create actual token
+	cookies.set("userToken", token, options);
 	res.writeHead(302, {
 		Location: "/"
 	});
