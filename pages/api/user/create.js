@@ -18,6 +18,7 @@ export default async function handler(req, res) {
 		return;
 	}
 
+	// TODO: Invite codes & adding user to neighbourhood
 	const { code } = req.query;
 	if(!code) {
 		res.status(400).end();
