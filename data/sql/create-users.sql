@@ -3,9 +3,9 @@ CREATE TABLE users (
 	email VARCHAR(255) UNIQUE NOT NULL,
 	nickname VARCHAR(30) NOT NULL,
 	dob DATE NOT NULL,
+	joined_on DATE NOT NULL,
+	position CHAR(1) CHECK(position IN ("U", "M", "A")) NOT NULL DEFAULT "U",
 	fname VARCHAR(30),
 	lname VARCHAR(30),
-	joined_on DATE NOT NULL,
-	bio VARCHAR(250),
-	position CHAR(1) CHECK(position IS ("U", "M", "A"))
+	bio VARCHAR(250)
 );
