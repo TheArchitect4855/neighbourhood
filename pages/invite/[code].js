@@ -137,8 +137,7 @@ export async function getServerSideProps(ctx) {
 		};
 	}
 
-	const { url } = req;
-	const code = url.substring("/invite/".length);
+	const { code } = ctx.query;
 	const invite = getInvite(code);
 	
 	let props = {};
