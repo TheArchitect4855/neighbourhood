@@ -55,6 +55,8 @@ export default class Profile extends React.Component {
 						{ bioContent }
 						<Link href="/profile/edit">Edit</Link>
 					</article>
+
+					<Link href="/api/user/logout">Log Out</Link>
 				</main>
 
 				<Footer />
