@@ -19,7 +19,7 @@ export default async function handler(req, res) {
 		return;
 	}
 
-	const { ok, msg } = await useLoginCode(email, code);
+	const { ok, msg, uid } = await useLoginCode(email, code);
 	if(!ok) {
 		res.writeHead(302, {
 			Location: `/login?msg=${encodeURIComponent(msg)}`
@@ -29,7 +29,7 @@ export default async function handler(req, res) {
 		return;
 	}
 
-	const token = jwt.sign({ email }, "supersecret", {
+	const token = jwt.sign({ email, uid }, "supersecret", {
 		expiresIn: "30d",
 		issuer: "Neighbourhood",
 	});
