@@ -47,7 +47,7 @@ export default async function handler(req, res) {
 	}
 
 	try {
-		const uid = getUserId(email);
+		const uid = await getUserId(email);
 		const notification = Notification.user("Welcome to Neighbourhood!", uid);
 		await notification.send();
 	} catch(e) {
