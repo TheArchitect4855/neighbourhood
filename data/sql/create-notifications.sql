@@ -1,0 +1,7 @@
+CREATE TABLE notifications (
+	uid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+	content VARCHAR(250) NOT NULL,
+	target TINYINT NOT NULL,
+	neighbourhood INTEGER,
+	user_id INTEGER
+);

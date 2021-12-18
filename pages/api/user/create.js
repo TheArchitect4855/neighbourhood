@@ -1,5 +1,6 @@
 import Cookies from "cookies";
-import { createAccount, validateToken } from "../../../lib/backend";
+import { createAccount, getUserId, validateToken } from "../../../lib/backend";
+import Notification from "../../../lib/notifications";
 
 export default async function handler(req, res) {
 	if(req.method != "POST") {
@@ -43,6 +44,14 @@ export default async function handler(req, res) {
 
 		res.end();
 		return;
+	}
+
+	try {
+		const uid = getUserId(email);
+		const notification = Notification.user("Welcome to Neighbourhood!", uid);
+		await notification.send();
+	} catch(e) {
+		console.error(e);
 	}
 
 	res.writeHead(302, {
