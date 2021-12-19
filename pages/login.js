@@ -100,7 +100,7 @@ export async function getServerSideProps(ctx) {
 	if(userToken && validateToken(userToken)) {
 		return {
 			redirect: {
-				location: "/",
+				destination: "/",
 				permanent: false,
 			}
 		}

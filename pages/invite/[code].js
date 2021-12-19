@@ -44,7 +44,7 @@ export default withRouter(class Invite extends React.Component {
 							<tr>
 								<td>
 									<label htmlFor="nickname">Nickname:*</label> <br />
-									<input name="nickname" type="text" placeholder={this.state.nickname} required />
+									<input name="nickname" type="text" maxLength="30" placeholder={this.state.nickname} required />
 								</td>
 								<td className="subtitle">
 									Your public display name on Neighbourhood. You can change this later.
@@ -64,7 +64,7 @@ export default withRouter(class Invite extends React.Component {
 							<tr>
 								<td>
 									<label htmlFor="fname">First Name:</label> <br />
-									<input name="fname" type="text" placeholder="First" />
+									<input name="fname" type="text" maxLength="30" placeholder="First" />
 								</td>
 								<td className="subtitle">
 									Optional. Your first or preferred name to be displayed on your profile.
@@ -74,7 +74,7 @@ export default withRouter(class Invite extends React.Component {
 							<tr>
 								<td>
 									<label htmlFor="lname">Last Name:</label> <br />
-									<input name="lname" type="text" placeholder="Last" />
+									<input name="lname" type="text" maxLength="30" placeholder="Last" />
 								</td>
 								<td className="subtitle">
 									Optional. Your last name to be displayed on your profile.
@@ -141,7 +141,8 @@ export async function getServerSideProps(ctx) {
 	return {
 		props: {
 			valid,
-			neighbourhood
+			neighbourhood,
+			code: query.code,
 		}
 	}
 }

@@ -78,7 +78,7 @@ export async function getServerSideProps(ctx) {
 	if(!userToken || !validateToken(userToken)) {
 		return {
 			redirect: {
-				location: "/login",
+				destination: "/login",
 				permanent: false,
 			}
 		}

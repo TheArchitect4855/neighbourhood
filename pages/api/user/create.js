@@ -16,9 +16,10 @@ export default async function handler(req, res) {
 	}
 
 	try {
-		const { valid, neighbourhood } = getInviteCodeData(code);
+		const { valid, neighbourhood } = await getInviteCodeData(code);
 		if(!valid) {
 			res.status(400).send("Invalid code.");
+			return;
 		}
 
 		await createAccount(email, nickname, dob, fname, lname, neighbourhood);
@@ -27,8 +28,14 @@ export default async function handler(req, res) {
 		}).end();
 	} catch(e) {
 		console.error(e);
+
+		let message = e.message;
+		if(e.errno == 19) {
+			message = "Email is already in use"
+		}
+
 		res.writeHead(302, {
-			Location: `/invite/${code}?msg=${encodeURIComponent(`Error creating account: ${e.message}`)}`
+			Location: `/invite/${code}?msg=${encodeURIComponent(`Error creating account: ${message}.`)}`
 		}).end();
 	}
 }
