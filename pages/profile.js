@@ -82,7 +82,8 @@ export async function getServerSideProps(ctx) {
 	let userDataToken = cookies.get("userData");
 	if(!userDataToken || !validateToken(userDataToken)) {
 		try {
-			const userData = await getUserData(userToken.uid);
+			const { uid } = jwt.decode(userToken);
+			const userData = await getUserData(uid);
 			userDataToken = jwt.sign(userData, "supersecret");
 			cookies.set("userData", userDataToken);
 		} catch(e) {
