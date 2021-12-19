@@ -4,6 +4,7 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Cookies from "cookies";
 import { getMessagesFor, getNotificationsFor, validateToken } from "../lib/backend";
+import { parseMd } from "../lib/mdparser";
 import * as jwt from "jsonwebtoken";
 
 export default class Inbox extends React.Component {
@@ -13,8 +14,9 @@ export default class Inbox extends React.Component {
 		let notifs = [];
 		let idx = 0;
 		for(const notif of notifications) {
+			console.dir(notif);
 			notifs.push(
-				<article dangerouslySetInnerHTML={{ __html: notif }} key={++idx}></article>
+				<article key={++idx}>{ parseMd(notif) }</article>
 			);
 		}
 
@@ -91,7 +93,7 @@ export async function getServerSideProps(ctx) {
 		messages = await getMessagesFor(uid);
 	} catch(e) {
 		console.error(e);
-		messages.push(`Error fetching messages: ${e.message}`);
+		messages.push(`Error fetching messages: ${e.message}.`);
 	}
 
 	let notifications = [];
@@ -99,12 +101,12 @@ export async function getServerSideProps(ctx) {
 		notifications = await getNotificationsFor(uid);
 	} catch(e) {
 		console.error(e);
-		notifications.push(`Error fetching notifications: ${e.message}`);
+		notifications.push(`Error fetching notifications: ${e.message}.`);
 	}
 
 	return {
 		props: {
-			messages: [],
+			messages,
 			notifications,
 		}
 	}
