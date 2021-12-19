@@ -8,7 +8,7 @@ import * as jwt from "jsonwebtoken";
 
 export default class Edit extends React.Component {
 	render() {
-		const { displayName, fname, lname, bio }
+		const { nickname, fname, lname, bio }
 			= this.props.userData;
 
 		return (
@@ -31,7 +31,7 @@ export default class Edit extends React.Component {
 										<label forName="nickname">Nickname: </label>
 									</td>
 									<td>
-										<input type="text" name="nickname" defaultValue={ displayName } maxLength="30" required />
+										<input type="text" name="nickname" defaultValue={ nickname } maxLength="30" required />
 									</td>
 								</tr>
 								
