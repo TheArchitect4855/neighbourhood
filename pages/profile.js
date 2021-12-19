@@ -10,7 +10,7 @@ import * as jwt from "jsonwebtoken";
 
 export default class Profile extends React.Component {
 	render() {
-		const { displayName, rank, position, neighbourhood, fname, lname, dob, bio } = this.props.userData;
+		const { nickname, rank, position, neighbourhood, fname, lname, dob, bio } = this.props.userData;
 		const bioContent = parseMd(bio ?? "");
 
 		let name = null;
@@ -32,7 +32,7 @@ export default class Profile extends React.Component {
 				<Header />
 				
 				<main>
-					<h2>{displayName} <span className="userRank">#{rank}</span></h2>
+					<h2>{nickname} <span className="userRank">#{rank}</span></h2>
 					<hr />
 
 					<table className="spaced">
@@ -81,9 +81,19 @@ export async function getServerSideProps(ctx) {
 
 	let userDataToken = cookies.get("userData");
 	if(!userDataToken || !validateToken(userDataToken)) {
-		const userData = await getUserData(userToken.uid);
-		userDataToken = jwt.sign(userData, "supersecret");
-		cookies.set("userData", userDataToken);
+		try {
+			const userData = await getUserData(userToken.uid);
+			userDataToken = jwt.sign(userData, "supersecret");
+			cookies.set("userData", userDataToken);
+		} catch(e) {
+			console.error(e);
+			return {
+				redirect: {
+					destination: "/api/user/logout",
+					permanent: false,
+				}
+			}
+		}
 	}
 
 	return {
