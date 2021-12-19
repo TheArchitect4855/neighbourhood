@@ -4,6 +4,7 @@ import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import Head from "next/head";
 import { validateToken, getUserData } from "../../lib/backend";
+import * as jwt from "jsonwebtoken";
 
 export default class Edit extends React.Component {
 	render() {
@@ -73,5 +74,28 @@ export default class Edit extends React.Component {
 }
 
 export async function getServerSideProps(ctx) {
-	// TODO
+	const { req, res } = ctx;
+	const cookies = new Cookies(req, res);
+	const userToken = cookies.get("userToken");
+	if(!userToken || !validateToken(userToken)) {
+		return {
+			redirect: {
+				destination: "/login",
+				permanent: false,
+			}
+		}
+	}
+
+	let userDataToken = cookies.get("userData");
+	if(!userDataToken || !validateToken(userDataToken)) {
+		const userData = await getUserData(userToken.uid);
+		userDataToken = jwt.sign(userData, "supersecret");
+		cookies.set("userData", userDataToken);
+	}
+
+	return {
+		props: {
+			userData: jwt.decode(userDataToken)
+		}
+	}
 }
