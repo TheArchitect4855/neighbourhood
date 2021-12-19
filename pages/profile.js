@@ -2,10 +2,11 @@ import Head from "next/head";
 import React from "react";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
-import Cookies from "cookies";
-import { getUserData, validateToken } from "../lib/backend";
 import { parseMd } from "../lib/mdparser";
 import Link from "next/link";
+import Cookies from "cookies";
+import { validateToken, getUserData } from "../lib/backend";
+import * as jwt from "jsonwebtoken";
 
 export default class Profile extends React.Component {
 	render() {
@@ -68,19 +69,26 @@ export default class Profile extends React.Component {
 export async function getServerSideProps(ctx) {
 	const { req, res } = ctx;
 	const cookies = new Cookies(req, res);
-
 	const userToken = cookies.get("userToken");
 	if(!userToken || !validateToken(userToken)) {
 		return {
 			redirect: {
-				destination: "/login",
+				location: "/login",
 				permanent: false,
 			}
-		};
+		}
 	}
 
-	const userData = await getUserData(userToken);
+	let userDataToken = cookies.get("userData");
+	if(!userDataToken || !validateToken(userDataToken)) {
+		const userData = await getUserData(userToken.uid);
+		userDataToken = jwt.sign(userData, "supersecret");
+		cookies.set("userData", userDataToken);
+	}
+
 	return {
-		props: { userData }
+		props: {
+			userData: jwt.decode(userDataToken)
+		}
 	}
 }

@@ -3,7 +3,8 @@ import React from "react";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Cookies from "cookies";
-import { getNotificationsFor, getMessagesFor, validateToken } from "../lib/backend";
+import { getMessagesFor, getNotificationsFor, validateToken } from "../lib/backend";
+import * as jwt from "jsonwebtoken";
 
 export default class Inbox extends React.Component {
 	render() {
@@ -73,23 +74,38 @@ export default class Inbox extends React.Component {
 export async function getServerSideProps(ctx) {
 	const { req, res } = ctx;
 	const cookies = new Cookies(req, res);
-
 	const userToken = cookies.get("userToken");
 	if(!userToken || !validateToken(userToken)) {
 		return {
 			redirect: {
-				destination: "/login",
+				location: "/login",
 				permanent: false,
 			}
-		};
+		}
+	}
+	
+	const { uid } = jwt.decode(userToken);
+
+	let messages = [];
+	try {
+		messages = await getMessagesFor(uid);
+	} catch(e) {
+		console.error(e);
+		messages.push(`Error fetching messages: ${e.message}`);
 	}
 
-	const messages = getMessagesFor(userToken);
-	const notifications = getNotificationsFor(userToken);
+	let notifications = [];
+	try {
+		notifications = await getNotificationsFor(uid);
+	} catch(e) {
+		console.error(e);
+		notifications.push(`Error fetching notifications: ${e.message}`);
+	}
+
 	return {
 		props: {
-			messages,
+			messages: [],
 			notifications,
 		}
-	};
+	}
 }

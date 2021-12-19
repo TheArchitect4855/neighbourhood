@@ -1,9 +1,9 @@
 import Head from "next/head";
 import React from "react";
-import Cookies from "cookies";
-import { getInvite, validateToken } from "../../lib/backend";
 import generateNickname from "../../lib/generateNickname";
 import { withRouter } from "next/router";
+import { getInviteCodeData, validateToken } from "../../lib/backend";
+import Cookies from "cookies";
 
 export default withRouter(class Invite extends React.Component {
 	constructor(props) {
@@ -125,30 +125,23 @@ export default withRouter(class Invite extends React.Component {
 });
 
 export async function getServerSideProps(ctx) {
-	const { req, res } = ctx;
+	const { req, res, query } = ctx;
 	const cookies = new Cookies(req, res);
-
 	const userToken = cookies.get("userToken");
 	if(userToken && validateToken(userToken)) {
 		return {
 			props: {
-				message: "You're already in a neighbourhood!"
+				valid: false,
+				message: "You're already in a Neighbourhood!",
 			}
-		};
+		}
 	}
 
-	const { code } = ctx.query;
-	const invite = getInvite(code);
-	
-	let props = {};
-	if(invite && invite.valid) {
-		props = invite;
-		props.code = code;
-	} else {
-		props.valid = false;
-	}
-
+	const { valid, neighbourhood } = await getInviteCodeData(query.code);
 	return {
-		props
+		props: {
+			valid,
+			neighbourhood
+		}
 	}
 }

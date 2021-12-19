@@ -73,21 +73,5 @@ export default class Edit extends React.Component {
 }
 
 export async function getServerSideProps(ctx) {
-	const { req, res } = ctx;
-	const cookies = new Cookies(req, res);
-
-	const userToken = cookies.get("userToken");
-	if(!userToken || !validateToken(userToken)) {
-		return {
-			redirect: {
-				destination: "/login",
-				permanent: false,
-			}
-		};
-	}
-
-	const userData = await getUserData(userToken);
-	return {
-		props: { userData }
-	}
+	// TODO
 }

@@ -4,9 +4,10 @@ import Link from "next/link";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { parseMd } from "../lib/mdparser";
-import { validateToken, getPostsFor } from "../lib/backend";
+import { validateToken, getPostsFor, getUserData } from "../lib/backend";
 import styles from "../styles/index.module.css";
 import Head from "next/head";
+import * as jwt from "jsonwebtoken";
 
 export default class Home extends React.Component {
 	constructor(props) {
@@ -95,21 +96,38 @@ export default class Home extends React.Component {
 export async function getServerSideProps(ctx) {
 	const { req, res } = ctx;
 	const cookies = new Cookies(req, res);
-
 	const userToken = cookies.get("userToken");
 	if(!userToken || !validateToken(userToken)) {
 		return {
 			redirect: {
-				destination: "/login",
+				location: "/login",
 				permanent: false,
 			}
-		};
+		}
 	}
 
-	const posts = getPostsFor(1);
-	return {
-		props: {
-			posts
+	let userDataToken = cookies.get("userData");
+	if(!userDataToken || !validateToken(userDataToken)) {
+		const userData = await getUserData(userToken.uid);
+		userDataToken = jwt.sign(userData, "supersecret");
+		cookies.set("userData", userDataToken);
+	}
+
+	const { neighbourhood } = jwt.decode(userDataToken);
+	
+	try {
+		const posts = await getPostsFor(neighbourhood);
+		return {
+			props: {
+				posts
+			}
 		}
-	};
+	} catch(e) {
+		console.error(e);
+		return {
+			props: {
+				posts: []
+			}
+		}
+	}
 }

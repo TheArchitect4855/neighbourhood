@@ -1,6 +1,4 @@
-import Cookies from "cookies";
-import { createAccount, getUserId, validateToken } from "../../../lib/backend";
-import Notification from "../../../lib/notifications";
+import { createAccount, getInviteCodeData } from "../../../lib/backend";
 
 export default async function handler(req, res) {
 	if(req.method != "POST") {
@@ -8,55 +6,29 @@ export default async function handler(req, res) {
 		return;
 	}
 
-	const cookies = new Cookies(req, res);
-	const userToken = cookies.get("userToken");
-	if(userToken && validateToken(userToken)) {
-		res.writeHead(302, {
-			Location: "/"
-		});
-
-		res.end();
-		return;
-	}
-
-	// TODO: Invite codes & adding user to neighbourhood
 	const { code } = req.query;
-	if(!code) {
-		res.status(400).end();
-		return;
-	}
-	 
 	const { email, nickname, dob, fname, lname, tos } = req.body;
 	if(!email || !nickname || !dob || tos != "on") {
 		res.writeHead(302, {
-			Location: `/invite/${code}?msg=${encodeURIComponent("Missing required parameters")}`
-		});
-
-		res.end();
-		return;
-	}
-
-	const { ok, msg } = await createAccount(email, nickname, dob, fname, lname);
-	if(!ok) {
-		res.writeHead(302, {
-			Location: `/invite/${code}?msg=${encodeURIComponent(msg)}`
-		});
-
-		res.end();
+			Location: `/invite/${code}?msg=${encodeURIComponent("Missing required parameters!")}`
+		}).end();
 		return;
 	}
 
 	try {
-		const uid = await getUserId(email);
-		const notification = Notification.user("Welcome to Neighbourhood!", uid);
-		await notification.send();
+		const { valid, neighbourhood } = getInviteCodeData(code);
+		if(!valid) {
+			res.status(400).send("Invalid code.");
+		}
+
+		await createAccount(email, nickname, dob, fname, lname, neighbourhood);
+		res.writeHead(302, {
+			Location: `/login?msg=${encodeURIComponent("Account successfully created.")}`
+		}).end();
 	} catch(e) {
 		console.error(e);
+		res.writeHead(302, {
+			Location: `/invite/${code}?msg=${encodeURIComponent(`Error creating account: ${e.message}`)}`
+		}).end();
 	}
-
-	res.writeHead(302, {
-		Location: `/login?msg=${encodeURIComponent(msg)}`
-	});
-
-	res.end();
 }

@@ -96,15 +96,14 @@ export default withRouter(class Login extends React.Component {
 export async function getServerSideProps(ctx) {
 	const { req, res } = ctx;
 	const cookies = new Cookies(req, res);
-
 	const userToken = cookies.get("userToken");
 	if(userToken && validateToken(userToken)) {
 		return {
 			redirect: {
-				destination: "/",
+				location: "/",
 				permanent: false,
 			}
-		};
+		}
 	}
 
 	return {

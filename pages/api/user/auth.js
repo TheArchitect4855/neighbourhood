@@ -1,7 +1,6 @@
 import Cookies from "cookies";
-import { useLoginCode } from "../../../lib/backend";
-
-const jwt = require("jsonwebtoken");
+import { getUserData, useLoginCode } from "../../../lib/backend";
+import * as jwt from "jsonwebtoken";
 
 export default async function handler(req, res) {
 	if(req.method != "POST") {
@@ -12,38 +11,40 @@ export default async function handler(req, res) {
 	const { email, code, remember } = req.body;
 	if(!email || !code) {
 		res.writeHead(302, {
-			Location: `/login?msg=${encodeURIComponent("Missing required parameters")}`
-		});
-
-		res.end();
+			Location: `/login?msg=${encodeURIComponent("Missing required parameters.")}`
+		}).end();
 		return;
 	}
 
-	const { ok, msg, uid } = await useLoginCode(email, code);
-	if(!ok) {
+	try {
+		const uid = await useLoginCode(email, code);
+		const userData = await getUserData(uid);
+
+		const jwtOptions = {
+			expiresIn: "30d",
+		};
+
+		const userToken = jwt.sign({
+			uid,
+			email
+		}, "supersecret", jwtOptions);
+
+		const userDataToken = jwt.sign(userData, "supersecret");
+
+		const cookieOptions = {};
+		if(remember == "on") cookieOptions.maxAge = 30 * 86400000;
+
+		const cookies = new Cookies(req, res);
+		cookies.set("userToken", userToken, cookieOptions);
+		cookies.set("userData", userDataToken);
+
 		res.writeHead(302, {
-			Location: `/login?msg=${encodeURIComponent(msg)}`
-		});
-
-		res.end();
-		return;
+			Location: "/"
+		}).end();
+	} catch(e) {
+		console.error(e);
+		res.writeHead(302, {
+			Location: `/login?msg=${encodeURIComponent(e.message)}`
+		}).end();
 	}
-
-	const token = jwt.sign({ email, uid }, "supersecret", {
-		expiresIn: "30d",
-		issuer: "Neighbourhood",
-	});
-
-	const options = {};
-	if(remember && remember == "on") {
-		options.maxAge = 30 * 86400000;
-	}
-
-	const cookies = new Cookies(req, res);
-	cookies.set("userToken", token, options);
-	res.writeHead(302, {
-		Location: "/"
-	});
-
-	res.end();
 }
