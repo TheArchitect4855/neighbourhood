@@ -88,9 +88,19 @@ export async function getServerSideProps(ctx) {
 
 	let userDataToken = cookies.get("userData");
 	if(!userDataToken || !validateToken(userDataToken)) {
-		const userData = await getUserData(userToken.uid);
-		userDataToken = jwt.sign(userData, "supersecret");
-		cookies.set("userData", userDataToken);
+		try {
+			const userData = await getUserData(userToken.uid);
+			userDataToken = jwt.sign(userData, "supersecret");
+			cookies.set("userData", userDataToken);
+		} catch(e) {
+			console.error(e);
+			return {
+				redirect: {
+					destination: "/api/user/logout",
+					permanent: false,
+				}
+			}
+		}
 	}
 
 	return {
