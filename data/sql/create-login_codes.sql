@@ -1,5 +1,5 @@
 CREATE TABLE login_codes (
 	email VARCHAR(255) NOT NULL UNIQUE,
-	code VARCHAR(5) NOT NULL,
+	code CHAR(5) NOT NULL,
 	expires DATETIME NOT NULL
 );
