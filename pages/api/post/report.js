@@ -1,7 +1,9 @@
 import Cookies from "cookies";
-import { validateToken } from "../../../lib/backend";
+import { getPostData, validateToken } from "../../../lib/backend";
+import { decode } from "jsonwebtoken";
+import Notification from "../../../lib/notifications";
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
 	if(req.method != "POST") {
 		res.status(400).send();
 		return;
@@ -9,7 +11,8 @@ export default function handler(req, res) {
 
 	const cookies = new Cookies(req, res);
 	const userToken = cookies.get("userToken");
-	if(!userToken || !validateToken(userToken)) {
+	const userDataToken = cookies.get("userData");
+	if(!userToken || !validateToken(userToken) || !userDataToken || !validateToken(userDataToken)) {
 		res.writeHead(302, {
 			Location: "/login"
 		});
@@ -18,14 +21,24 @@ export default function handler(req, res) {
 		return;
 	}
 
+	const userData = decode(userDataToken);
+
 	const { reason, postId } = req.body;
 	if(!reason || !postId) {
 		res.status(400).end();
+		return;
 	}
 
-	// TODO: Validate that the target post is in this user's neighbourhood
-	// TODO: Send report
-	console.log(`REPORT ${reason}`);
+	const { neighbourhood }	= await getPostData(postId);
+	if(!neighbourhood || neighbourhood != userData.neighbourhood) {
+		res.status(404).send("Post not found.");
+		return;
+	}
+
+	const content = `User ${userData.nickname} reported [this post](/post/view?id=${postId}). Reason:\n\n`
+		+ "```" + reason + "```";
+	const notification = Notification.moderators(content);
+	await notification.send(neighbourhood);
 
 	res.writeHead(302, {
 		Location: `/#${encodeURIComponent(postId)}`

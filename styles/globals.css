@@ -35,7 +35,7 @@
 :root {
 	--primary-color: #fff;
 	--secondary-color: #eee;
-	--tertiary-color: #666;
+	--tertiary-color: #aaa;
 }
 
 #createPost {
@@ -117,6 +117,13 @@ button {
 
 button.menuButton {
 	background-color: transparent;
+}
+
+code {
+	background-color: var(--tertiary-color);
+	border-radius: 5px;
+	display: block;
+	padding: 0.5em;
 }
 
 form {
