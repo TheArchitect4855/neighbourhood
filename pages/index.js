@@ -24,14 +24,19 @@ export default class Home extends React.Component {
 	render() {
 		const { posts } = this.props;
 		let body = [];
+	
 		for(let post of posts) {
 			const { name, rank } = post.author;
 			const content = parseMd(post.content);
 			
-			let deleteButton = null;
-			if(post.canDelete) {
-				deleteButton = (
+			let actionButton = null;
+			if(post.canDelete || this.props.reportShouldDelete) {
+				actionButton = (
 					<img src="/icons/trash.svg" alt="Trash Icon" onClick={ () => this.deletePost(post.id) }></img>
+				);
+			} else {
+				actionButton = (
+					<img src="/icons/flag.svg" alt="Flag Icon" onClick={ () => this.report(post.id) }></img>
 				);
 			}
 
@@ -40,12 +45,11 @@ export default class Home extends React.Component {
 					<h4>{name} <span className="userRank">#{rank}</span></h4>
 					{content}
 					<div className={ styles.postFooter }>
-						{ deleteButton }
 						<Link href={ `/post/view?id=${post.id}` }>
 							<img src="/icons/message.svg" alt="Message Icon"></img>
 						</Link>
 
-						<img src="/icons/flag.svg" alt="Flag Icon" onClick={ () => this.report(post.id) }></img>
+						{ actionButton }
 					</div>
 				</article>
 			);
@@ -159,13 +163,15 @@ export async function getServerSideProps(ctx) {
 		}
 	}
 
-	const { uid, neighbourhood } = jwt.decode(userDataToken);
-	
+	const { uid, neighbourhood, position } = jwt.decode(userDataToken);
+	const reportShouldDelete = position == "Administrator" || position == "Moderator";
+
 	try {
 		const posts = await getPostsFor(uid, neighbourhood);
 		return {
 			props: {
-				posts
+				posts,
+				reportShouldDelete,
 			}
 		}
 	} catch(e) {
