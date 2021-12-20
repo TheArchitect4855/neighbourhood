@@ -12,10 +12,13 @@ import * as jwt from "jsonwebtoken";
 export default class Home extends React.Component {
 	constructor(props) {
 		super(props);
+		this.deleteRef = React.createRef();
 		this.reportRef = React.createRef();
+		this.postIdDeleteRef = React.createRef();
 		this.postIdInputRef = React.createRef();
+		this.deletePost = this.deletePost.bind(this);
 		this.report = this.report.bind(this);
-		this.cancelReport = this.cancelReport.bind(this);
+		this.closePopups = this.closePopups.bind(this);
 	}
 	
 	render() {
@@ -24,11 +27,20 @@ export default class Home extends React.Component {
 		for(let post of posts) {
 			const { name, rank } = post.author;
 			const content = parseMd(post.content);
+			
+			let deleteButton = null;
+			if(post.canDelete) {
+				deleteButton = (
+					<img src="/icons/trash.svg" alt="Trash Icon" onClick={ () => this.deletePost(post.id) }></img>
+				);
+			}
+
 			body.push(
 				<article key={ post.id } id={ post.id }>
 					<h4>{name} <span className="userRank">#{rank}</span></h4>
 					{content}
 					<div className={ styles.postFooter }>
+						{ deleteButton }
 						<Link href={ `/post/view?id=${post.id}` }>
 							<img src="/icons/message.svg" alt="Message Icon"></img>
 						</Link>
@@ -63,6 +75,17 @@ export default class Home extends React.Component {
 					<Link href="/post/create">+</Link>
 				</button>
 
+				<article className="popup" ref={ this.deleteRef }>
+					<h2>Delete Post</h2>
+					<p>Are you sure you want to delete this post?</p>
+					<form action="/api/post/delete" method="POST" style={{ textAlign: "left" }}>
+						<input type="hidden" name="postId" ref={ this.postIdDeleteRef } />
+						<button type="submit">Yes, delete it</button>
+						<span style={{ margin: "0.5em" }}></span>
+						<button type="reset" onClick={ this.closePopups }>Cancel</button>
+					</form>
+				</article>
+
 				<article className="popup" ref={ this.reportRef }>
 					<h2>Report Post</h2>
 					<form action="/api/post/report" method="POST" style={{ textAlign: "left" }}>
@@ -71,13 +94,21 @@ export default class Home extends React.Component {
 						<input type="hidden" name="postId" ref={ this.postIdInputRef } />
 						<button type="submit">Submit</button>
 						<span style={{ margin: "0.5em" }}></span>
-						<button type="reset" onClick={ this.cancelReport }>Cancel</button>
+						<button type="reset" onClick={ this.closePopups }>Cancel</button>
 					</form>
 				</article>
 
 				<Footer />
 			</div>
 		);
+	}
+
+	deletePost(id) {
+		const deletePopup = this.deleteRef.current;
+		deletePopup.style.display = "block";
+
+		const postIdInput = this.postIdDeleteRef.current;
+		postIdInput.value = id;
 	}
 
 	report(id) {
@@ -88,9 +119,12 @@ export default class Home extends React.Component {
 		postIdInput.value = id;
 	}
 
-	cancelReport() {
-		const { current } = this.reportRef;
-		current.style.display = "none";
+	closePopups() {
+		const deletePopup = this.deleteRef.current;
+		deletePopup.style.display = "none";
+
+		const report = this.reportRef.current;
+		report.style.display = "none";
 	}
 }
 
@@ -125,10 +159,10 @@ export async function getServerSideProps(ctx) {
 		}
 	}
 
-	const { neighbourhood } = jwt.decode(userDataToken);
+	const { uid, neighbourhood } = jwt.decode(userDataToken);
 	
 	try {
-		const posts = await getPostsFor(neighbourhood);
+		const posts = await getPostsFor(uid, neighbourhood);
 		return {
 			props: {
 				posts
