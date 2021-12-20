@@ -23,8 +23,10 @@ export default withRouter(class Create extends React.Component {
 
 					<form style={{ textAlign: "left" }} method="POST" action="/api/post/create" encType="multipart/form-data">
 						<label htmlFor="content">Post Content:</label> <br />
-						<textarea name="content" maxLength="1000" rows="15" cols="70" placeholder="Use Markdown to format your post!" style={{ resize: "none" }}>
-						</textarea>
+						<textarea name="content" maxLength="1000" rows="25" cols="40" placeholder="Use Markdown to format your post!" style={{ resize: "none" }}>
+						</textarea> 
+						
+						<br />
 						
 						<a href="https://www.markdownguide.org/basic-syntax/" target="_blank" noreferrer="true" nofollow="true">Markdown Guide</a> <br />
 
