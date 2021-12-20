@@ -4,6 +4,7 @@ import * as multipart from "parse-multipart-data";
 import { writeFile } from "fs";
 import { createHash } from "crypto";
 import * as jwt from "jsonwebtoken";
+import * as sharp from "sharp";
 
 export default function handler(req, res) {
 	if(req.method != "POST") {
@@ -89,7 +90,17 @@ async function handleParts(parts, authorUid, neighbourhood) {
 
 	let filename = null;
 	if(attachment) {
-		// TODO: Resize if image
+		// Resize if image
+		if(attachment.type.startsWith("image/")) {
+			const resized = await sharp(attachment.data)
+				.resize(1024)
+				.png()
+				.toBuffer();
+			attachment.data = resized;
+			attachment.type = "image/png";
+			attachment.filename += ".png";
+		}
+
 		if(attachment.data.length > 8e+6) throw new Error("Attachment cannot be larger than 8MB");
 
 		const ext = attachment.filename.split(".").pop();
