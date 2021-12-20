@@ -92,7 +92,7 @@ async function handleParts(parts, authorUid, neighbourhood) {
 		// TODO: Resize if image
 		if(attachment.data.length > 8e+6) throw new Error("Attachment cannot be larger than 8MB");
 
-		const ext = attachment.type.split("/")[1];
+		const ext = attachment.filename.split(".").pop();
 		filename = createHash("md5").update(attachment.data).digest("base64url") + `.${ext}`;
 		const path = `${process.cwd()}/public/uploads/${filename}`;
 		writeFile(path, attachment.data, (err) => { if(err) console.error(err) });
