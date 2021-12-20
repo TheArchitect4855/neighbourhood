@@ -56,6 +56,7 @@ export default class Home extends React.Component {
 				<Header />
 				<main>
 					{body}
+					<div style={{ marginBottom: "6em" }}></div>
 				</main>
 
 				<button id="createPost">
