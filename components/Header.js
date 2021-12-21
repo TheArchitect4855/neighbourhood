@@ -7,6 +7,7 @@ import bellIcon from "../public/icons/bell.svg";
 import homeIcon from "../public/icons/home.svg";
 import menuIcon from "../public/icons/menu.svg";
 import userIcon from "../public/icons/user.svg";
+import textIcon from "../public/icons/file-text.svg";
 
 export default class Header extends React.Component {
 	constructor(props) {
@@ -46,6 +47,12 @@ export default class Header extends React.Component {
 					<button className="menuButton">
 						<Link href="/profile">
 							<Image src={userIcon} alt="User Icon"></Image>
+						</Link>
+					</button>
+
+					<button className="menuButton">
+						<Link href="/residents">
+							<Image src={textIcon} alt="Text Icon"></Image>
 						</Link>
 					</button>
 				</div>
