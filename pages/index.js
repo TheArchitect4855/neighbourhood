@@ -26,7 +26,7 @@ export default class Home extends React.Component {
 		let body = [];
 	
 		for(let post of posts) {
-			const { name, rank } = post.author;
+			const { name, rank, uid } = post.author;
 			const content = parseMd(post.content);
 			
 			let actionButton = null;
@@ -42,7 +42,11 @@ export default class Home extends React.Component {
 
 			body.push(
 				<article key={ post.id } id={ post.id }>
-					<h4>{name} <span className="userRank">#{rank}</span></h4>
+					<h4>
+						<a href={ `/profile/${uid}` } style={{ color: "inherit", textDecoration: "none" }}>{name}</a>
+						{ ' ' }
+						<span className="userRank">#{rank}</span>
+					</h4>
 					{content}
 					<div className={ styles.postFooter }>
 						<Link href={ `/post/view?id=${post.id}` }>
