@@ -1,6 +1,7 @@
 import Cookies from "cookies";
 import { decode } from "jsonwebtoken";
 import { getUserData, removeUserFromNeighbourhood, validateToken } from "../../../lib/backend";
+import Notification from "../../../lib/notifications";
 
 export default async function handler(req, res) {
 	if(req.method != "POST") {
@@ -42,6 +43,9 @@ export default async function handler(req, res) {
 			res.status(403).send("You do not have the permissions to kick this user.");
 			return;
 		}
+
+		const notification = Notification.all(`User ${userData.nickname} has been removed from the Neighbourhood. Reason:\n\n${reason}`);
+		notification.send(userData.neighbourhood);
 
 		await removeUserFromNeighbourhood(uid);
 
