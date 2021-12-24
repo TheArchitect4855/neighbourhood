@@ -26,19 +26,11 @@ export default async function handler(req, res) {
 		return;
 	}
 
-	const { nickname, fname, lname, bio } = req.body;
-	if(!nickname) {
-		res.writeHead(302, {
-			Location: `/profile/edit?msg=${encodeURIComponent("Missing required parameters")}`
-		}).end();
-
-		return;
-	}
-
+	const { email_notifications } = req.body;
 	try {
 		const { uid } = jwt.decode(userToken);
-		const { email_notifications } = jwt.decode(userDataToken);
-		await updateUserData(uid, nickname, fname, lname, bio, email_notifications);
+		const { nickname, fname, lname, bio } = jwt.decode(userDataToken);
+		await updateUserData(uid, nickname, fname, lname, bio, email_notifications == "on");
 		cookies.set("userData");
 		res.writeHead(302, {
 			Location: "/profile"
@@ -46,7 +38,7 @@ export default async function handler(req, res) {
 	} catch(e) {
 		console.error(e);
 		res.writeHead(302, {
-			Location: `/profile/edit?msg=${encodeURIComponent(`Failed to update profile: ${e.message}`)}`
+			Location: `/profile/edit?msg=${encodeURIComponent(`Failed to update preferences: ${e.message}`)}`
 		}).end();
 	}
 }

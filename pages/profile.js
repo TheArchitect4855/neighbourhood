@@ -57,6 +57,8 @@ export default class Profile extends React.Component {
 						<Link href="/profile/edit">Edit</Link>
 					</article>
 
+					<Link href="/profile/preferences">Preferences</Link>
+					<br />
 					<Link href="/api/user/logout">Log Out</Link>
 				</main>
 

@@ -9,5 +9,6 @@ CREATE TABLE users (
 	fname VARCHAR(30),
 	lname VARCHAR(30),
 	bio VARCHAR(500),
-	joined_on DATE NOT NULL DEFAULT Date()
+	joined_on DATE NOT NULL DEFAULT Date(),
+	email_notifications BOOLEAN NOT NULL DEFAULT 1
 );
