@@ -28,7 +28,7 @@ export default withRouter(class Create extends React.Component {
 						
 						<br />
 						
-						<a href="https://www.markdownguide.org/basic-syntax/" target="_blank" noreferrer="true" nofollow="true">Markdown Guide</a> <br />
+						<a href="https://www.markdownguide.org/basic-syntax/" target="_blank" rel="noreferrer">Markdown Guide</a> <br />
 
 						<label htmlFor="attachment">Attach File: </label>
 						<input type="file" name="attachment" /> <br />
