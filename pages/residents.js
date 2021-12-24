@@ -7,6 +7,13 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 export default class Residents extends React.Component {
+	constructor(props) {
+		super(props);
+		this.leave = this.leave.bind(this);
+		this.closePopups = this.closePopups.bind(this);
+		this.leaveConfirmRef = React.createRef();
+	}
+	
 	render() {
 		const residents = [];
 		for(const resident of this.props.residents) {
@@ -36,11 +43,37 @@ export default class Residents extends React.Component {
 					<hr />
 
 					{ residents }
+
+					<button onClick={ this.leave } style={{ backgroundColor: "#f55" }}>Leave Neighbourhood</button>
 				</main>
 
 				<Footer />
+
+				<article className="popup" ref={ this.leaveConfirmRef }>
+					<h2>Leave Neighbourhood</h2>
+					<p>
+						Are you sure you want to leave the neighbourhood?
+						This will delete your account and you will not be able
+						to rejoin the neighbourhood unless you have an invite.
+					</p>
+					<form action="/api/user/leave" method="POST">
+						<button type="submit" style={{ backgroundColor: "#f55" }}>Yes</button>
+						<span style={{ margin: "0.5em" }}></span>
+						<button type="reset" onClick={ this.closePopups }>No</button>
+					</form>
+				</article>
 			</div>
 		);
+	}
+
+	leave() {
+		const { current } = this.leaveConfirmRef;
+		current.style.display = "block";
+	}
+
+	closePopups() {
+		const leavePopup = this.leaveConfirmRef.current;
+		leavePopup.style.display = "none";
 	}
 }
 
