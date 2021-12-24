@@ -1,4 +1,4 @@
-import { createAccount, getInviteCodeData, getUid, useInviteCode } from "../../../lib/backend";
+import { createAccount, getInviteCodeData, getUid, redeemInviteCode } from "../../../lib/backend";
 import Notification from "../../../lib/notifications";
 
 export default async function handler(req, res) {
@@ -24,7 +24,7 @@ export default async function handler(req, res) {
 		}
 
 		await createAccount(email, nickname, dob, fname, lname, neighbourhood);
-		useInviteCode(code);
+		redeemInviteCode(code);
 
 		const uid = await getUid(email);
 		const welcomeNotification = Notification.user(`Welcome to Neighbourhood #${neighbourhood}!`, uid);

@@ -1,5 +1,5 @@
 import Cookies from "cookies";
-import { getUserData, useLoginCode } from "../../../lib/backend";
+import { getUserData, redeemLoginCode } from "../../../lib/backend";
 import * as jwt from "jsonwebtoken";
 
 export default async function handler(req, res) {
@@ -17,7 +17,7 @@ export default async function handler(req, res) {
 	}
 
 	try {
-		const uid = await useLoginCode(email, code);
+		const uid = await redeemLoginCode(email, code);
 		const userData = await getUserData(uid);
 
 		const jwtOptions = {
