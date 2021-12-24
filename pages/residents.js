@@ -35,8 +35,8 @@ export default class Residents extends React.Component {
 		let createInviteButton = null;
 		if(this.props.position == "Administrator") {
 			createInviteButton = [
-				<button onClick={ this.createInvite } style={{ backgroundColor: "#5f5" }}>Create Invite</button>,
-				<span style={{ margin: "0.5em" }}></span>,
+				<button onClick={ this.createInvite } style={{ backgroundColor: "#5f5" }} key="createButton">Create Invite</button>,
+				<span style={{ margin: "0.5em" }} key="spacer"></span>,
 			];
 		}
 
