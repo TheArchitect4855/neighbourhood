@@ -11,7 +11,9 @@ export default class Residents extends React.Component {
 		super(props);
 		this.leave = this.leave.bind(this);
 		this.closePopups = this.closePopups.bind(this);
+		this.createInvite = this.createInvite.bind(this);
 		this.leaveConfirmRef = React.createRef();
+		this.notificationRef = React.createRef();
 	}
 	
 	render() {
@@ -30,6 +32,14 @@ export default class Residents extends React.Component {
 			);
 		}
 
+		let createInviteButton = null;
+		if(this.props.position == "Administrator") {
+			createInviteButton = [
+				<button onClick={ this.createInvite } style={{ backgroundColor: "#5f5" }}>Create Invite</button>,
+				<span style={{ margin: "0.5em" }}></span>,
+			];
+		}
+
 		return (
 			<div>
 				<Head>
@@ -44,6 +54,7 @@ export default class Residents extends React.Component {
 
 					{ residents }
 
+					{ createInviteButton }
 					<button onClick={ this.leave } style={{ backgroundColor: "#f55" }}>Leave Neighbourhood</button>
 				</main>
 
@@ -62,6 +73,10 @@ export default class Residents extends React.Component {
 						<button type="reset" onClick={ this.closePopups }>No</button>
 					</form>
 				</article>
+
+				<article className="notification" ref={ this.notificationRef }>
+					Invite code copied to clipboard
+				</article>
 			</div>
 		);
 	}
@@ -69,6 +84,25 @@ export default class Residents extends React.Component {
 	leave() {
 		const { current } = this.leaveConfirmRef;
 		current.style.display = "block";
+	}
+
+	async createInvite() {
+		const res = await fetch("/api/invite/create");
+		let message = "Invite code copied to clipboard"
+		if(res.ok) {
+			const code = await res.text();
+			navigator.clipboard.writeText(code);
+		} else {
+			message = "Error getting invite code"
+		}
+
+		const { current } = this.notificationRef;
+		current.innerText = message;
+		current.style.display = "block";
+
+		setTimeout(() => {
+			current.style.display = "none";
+		}, 2750);
 	}
 
 	closePopups() {
@@ -112,6 +146,7 @@ export async function getServerSideProps(ctx) {
 	return {
 		props: {
 			neighbourhood: userData.neighbourhood,
+			position: userData.position,
 			residents,
 		}
 	}

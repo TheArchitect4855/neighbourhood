@@ -8,6 +8,24 @@
 	}
 }
 
+@keyframes fadeInOut {
+	0% {
+		opacity: 0;
+	}
+
+	25% {
+		opacity: 1;
+	}
+
+	75% {
+		opacity: 1;
+	}
+
+	100% {
+		opacity: 0;
+	}
+}
+
 /* Landscape / Desktop */
 @media only screen and (min-width: 750px) {
 	.portrait {
@@ -86,6 +104,24 @@ article h4 {
 article img {
 	border-radius: 5px;
 	width: 100%;
+}
+
+article.notification {
+	animation: fadeInOut 3s;
+	background-color: black;
+	border-radius: 10px;
+	bottom: 1em;
+	color: white;
+	display: none;
+	font-family: 'Readex Pro', sans-serif;
+	font-size: 0.75em;
+	height: 3em;
+	left: calc(50% - 15ch);
+	line-height: 3em;
+	padding: 0;
+	position: fixed;
+	right: calc(50% - 15ch);
+	text-align: center;
 }
 
 article.popup {
