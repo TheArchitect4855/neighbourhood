@@ -44,6 +44,8 @@ export default withRouter(class Login extends React.Component {
 							<label htmlFor="code">Code:</label> <br />
 							<input type="text" name="code" placeholder="12345" minLength="5" maxLength="5" required /> <br/>
 							
+							<p>Check your email for your login code.</p>
+
 							<input type="checkbox" name="remember" />
 							<label htmlFor="remember">Remember Me</label> <br />
 							<button type="submit">Log In</button>
