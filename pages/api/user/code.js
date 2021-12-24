@@ -1,4 +1,8 @@
 import { createLoginCode } from "../../../lib/backend";
+import { config } from "dotenv";
+import { createTransport } from "nodemailer";
+
+config();
 
 export default async function handler(req, res) {
 	if(req.method != "POST") {
@@ -16,7 +20,9 @@ export default async function handler(req, res) {
 	}
 
 	try {
-		const { expiresIn } = await createLoginCode(email);
+		const { code, expiresIn } = await createLoginCode(email);
+		emailCode(code, expiresIn, email);
+
 		res.send(JSON.stringify({
 			ok: true,
 			msg: `Code created. It expires in ${expiresIn} minutes.`
@@ -28,4 +34,19 @@ export default async function handler(req, res) {
 			msg: e.message,
 		}));
 	}
+}
+
+function emailCode(code, expiresIn, to) {
+	const message = {
+		from: process.env.MAIL_FROM,
+		to,
+		subject: "Your Neighbourhood Login Code",
+		text: `Your login code is ${code}. It expires in ${expiresIn} minutes.`,
+	};
+
+	const transporter = createTransport(process.env.EMAIL_TRANSPORT);
+	transporter.sendMail(message, (err, info) => {
+		if(err) console.error(err);
+		else console.dir(info);
+	});
 }
