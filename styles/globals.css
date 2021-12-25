@@ -129,10 +129,11 @@ article.popup {
 	box-shadow: 0 0 5px 0 var(--tertiary-color);
 	display: none;
 	height: 40ch;
-	left: calc(50% - 25ch);
+	left: 50%;
 	position: fixed;
-	right: calc(50% - 25ch);
 	top: calc(50% - 20ch);
+	transform: translateX(-50%);
+	width: 85vw;
 }
 
 article.popup button {
@@ -224,4 +225,8 @@ table.spaced td {
 
 table.spaced td:last-child {
 	text-align: right;
+}
+
+textarea {
+	max-width: 95%;
 }
