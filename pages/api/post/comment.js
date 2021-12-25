@@ -2,6 +2,9 @@ import Cookies from "cookies";
 import { decode } from "jsonwebtoken";
 import { createComment, getPostData, validateToken } from "../../../lib/backend";
 import Notification from "../../../lib/notifications";
+import { config } from "dotenv";
+
+config();
 
 export default async function handler(req, res) {
 	if(req.method != "POST") {
@@ -48,7 +51,7 @@ export default async function handler(req, res) {
 		await createComment(uid, ret, comment);
 
 		const notification = Notification.user(
-			`User ${nickname} commented on [your post](/post/view?id=${ret})!`,
+			`User ${nickname} commented on [your post](${process.env.HOST}/post/view?id=${ret})!`,
 			author
 		);
 

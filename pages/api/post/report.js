@@ -2,6 +2,9 @@ import Cookies from "cookies";
 import { getPostData, validateToken } from "../../../lib/backend";
 import { decode } from "jsonwebtoken";
 import Notification from "../../../lib/notifications";
+import { config } from "dotenv";
+
+config();
 
 export default async function handler(req, res) {
 	if(req.method != "POST") {
@@ -35,7 +38,7 @@ export default async function handler(req, res) {
 		return;
 	}
 
-	const content = `User ${userData.nickname} reported [this post](/post/view?id=${postId}). Reason:\n\n`
+	const content = `User ${userData.nickname} reported [this post](${process.env.HOST}/post/view?id=${postId}). Reason:\n\n`
 		+ "```" + reason + "```";
 	const notification = Notification.moderators(content);
 	await notification.send(neighbourhood);
