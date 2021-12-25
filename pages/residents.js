@@ -14,6 +14,10 @@ export default class Residents extends React.Component {
 		this.createInvite = this.createInvite.bind(this);
 		this.leaveConfirmRef = React.createRef();
 		this.notificationRef = React.createRef();
+
+		this.state = {
+			inviteCode: "",
+		};
 	}
 	
 	render() {
@@ -56,6 +60,8 @@ export default class Residents extends React.Component {
 
 					{ createInviteButton }
 					<button onClick={ this.leave } style={{ backgroundColor: "#f55" }}>Leave Neighbourhood</button>
+					<br />
+					<p>{this.state.inviteCode}</p>
 				</main>
 
 				<Footer />
@@ -87,22 +93,37 @@ export default class Residents extends React.Component {
 	}
 
 	async createInvite() {
-		const res = await fetch("/api/invite/create");
 		let message = "Invite code copied to clipboard"
+
+		const res = await fetch("/api/invite/create");
 		if(res.ok) {
+			const perm = await navigator.permissions.query({
+				name: "clipboard-write"
+			});
+
 			const code = await res.text();
-			navigator.clipboard.writeText(code);
+			if(perm.state == "granted" || perm.state == "prompt") {
+				navigator.clipboard.writeText(code);
+			} else {
+				this.setState({
+					inviteCode: `Your invite code is ${code}`
+				});
+
+				message = null;
+			}	
 		} else {
 			message = "Error getting invite code"
 		}
 
-		const { current } = this.notificationRef;
-		current.innerText = message;
-		current.style.display = "block";
+		if(message) {
+			const { current } = this.notificationRef;
+			current.innerText = message;
+			current.style.display = "block";
 
-		setTimeout(() => {
-			current.style.display = "none";
-		}, 2750);
+			setTimeout(() => {
+				current.style.display = "none";
+			}, 2750);
+		}
 	}
 
 	closePopups() {
