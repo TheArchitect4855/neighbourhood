@@ -10,7 +10,7 @@ import styles from "../../styles/view.module.css";
 
 export default class View extends React.Component {
 	render() {
-		if(!this.props.userData || !this.props.postData) {
+		if(!this.props.postData) {
 			return (
 				<div>
 					<Head>
@@ -30,8 +30,7 @@ export default class View extends React.Component {
 			)
 		}
 
-		const { uid, rank, nickname } = this.props.userData;
-		const { content, pid } = this.props.postData;
+		const { content, pid, uid, rank, nickname } = this.props.postData;
 
 		let comments = [];
 		for(const comment of this.props.comments) {
@@ -134,7 +133,6 @@ export async function getServerSideProps(ctx) {
 	const comments = await getCommentsFor(postData.pid);
 	return {
 		props: {
-			userData,
 			postData,
 			comments,
 			message: msg ?? "",
