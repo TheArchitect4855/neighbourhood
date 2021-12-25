@@ -10,7 +10,7 @@ import * as jwt from "jsonwebtoken";
 
 export default class Profile extends React.Component {
 	render() {
-		const { nickname, rank, position, neighbourhood, fname, lname, dob, bio } = this.props.userData;
+		const { nickname, rank, position, neighbourhood, fname, lname, bio } = this.props.userData;
 		const bioContent = parseMd(bio ?? "");
 
 		let name = null;
@@ -43,11 +43,6 @@ export default class Profile extends React.Component {
 							</tr>
 
 							{name}
-
-							<tr>
-								<td className="subtitle">Birthday</td>
-								<td>{dob}</td>
-							</tr>
 						</tbody>
 					</table>
 

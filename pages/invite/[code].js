@@ -53,16 +53,6 @@ export default withRouter(class Invite extends React.Component {
 
 							<tr>
 								<td>
-									<label htmlFor="dob">Date of Birth:*</label> <br />
-									<input name="dob" type="date" required />
-								</td>
-								<td className="subtitle">
-									Your birthday. Needed for legal reasons and to wish you a happy birthday.
-								</td>
-							</tr>
-
-							<tr>
-								<td>
 									<label htmlFor="fname">First Name:</label> <br />
 									<input name="fname" type="text" maxLength="30" placeholder="First" />
 								</td>
@@ -84,7 +74,7 @@ export default withRouter(class Invite extends React.Component {
 					</table>
 
 					<input name="tos" type="checkbox" required />
-					<label htmlFor="tos"> I accept Neighbourhood&#39;s Terms of Service and Privacy Policy</label>
+					<label htmlFor="tos"> I accept Neighbourhood&#39;s Terms of Service and Privacy Policy and certify that I am over the age of 18 or the Age of Majority in my country</label>
 
 					<br />
 

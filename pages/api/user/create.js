@@ -8,8 +8,8 @@ export default async function handler(req, res) {
 	}
 
 	const { code } = req.query;
-	const { email, nickname, dob, fname, lname, tos } = req.body;
-	if(!email || !nickname || !dob || tos != "on") {
+	const { email, nickname, fname, lname, tos } = req.body;
+	if(!email || !nickname || tos != "on") {
 		res.writeHead(302, {
 			Location: `/invite/${code}?msg=${encodeURIComponent("Missing required parameters!")}`
 		}).end();
@@ -23,7 +23,7 @@ export default async function handler(req, res) {
 			return;
 		}
 
-		await createAccount(email, nickname, dob, fname, lname, neighbourhood);
+		await createAccount(email, nickname, fname, lname, neighbourhood);
 		redeemInviteCode(code);
 
 		const uid = await getUid(email);

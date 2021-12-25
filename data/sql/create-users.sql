@@ -4,7 +4,6 @@ CREATE TABLE users (
 	nickname VARCHAR(30) NOT NULL,
 	neighbourhood INTEGER NOT NULL,
 	rank INTEGER NOT NULL,
-	dob DATE NOT NULL,
 	position CHAR(1) NOT NULL CHECK(position IN ("R", "M", "A")),
 	fname VARCHAR(30),
 	lname VARCHAR(30),
