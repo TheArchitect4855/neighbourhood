@@ -18,7 +18,7 @@
     "parse-multipart-data": "^1.2.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "sharp": "^0.29.3",
+    "sharp": "^0.32.6",
     "sqlite": "^4.0.23",
     "sqlite3": "^4.2.0"
   },
